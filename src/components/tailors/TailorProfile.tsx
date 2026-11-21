@@ -13,6 +13,7 @@ import {
   Star,
 } from "lucide-react";
 import { useTailor } from "@/hooks/useTailors";
+import ReviewsSection from "@/components/tailors/ReviewsSection";
 import { useFavorites } from "@/hooks/useFavorites";
 import { categories } from "@/data/categories";
 import { formatPrice } from "@/lib/format";
@@ -162,8 +163,8 @@ export default function TailorProfile({ id }: { id: string }) {
             Portfolio
           </h2>
           <PortfolioGallery images={tailor.portfolio} name={tailor.name} />
+           <ReviewsSection tailorId={tailor.id} />
         </section>
-
         {/* Narxlar va xarita */}
         <aside className="space-y-6 lg:col-span-2">
           <section className="rounded-3xl bg-white p-5 shadow-sm">

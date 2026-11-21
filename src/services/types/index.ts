@@ -58,3 +58,19 @@ export type RegisterPayload = LoginPayload & {
 };
 
 export type UserRole = "client" | "tailor" | "admin";
+
+export type Review = {
+  id: string;
+  tailorId: string;
+  userId: string;
+  userName: string;
+  rating: number; // 1-5
+  comment: string;
+  createdAt: string;
+};
+
+export type ReviewPayload = {
+  tailorId: string;
+  rating: number;
+  comment: string;
+};

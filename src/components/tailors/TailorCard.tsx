@@ -56,9 +56,13 @@ export default function TailorCard({ tailor }: { tailor: TailorWithDistance }) {
         <div className="mt-1 flex items-center gap-3 text-sm text-ink/70">
           <span className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-            <b className="text-ink">{tailor.rating.toFixed(1)}</b>
-            {tailor.reviewsCount !== undefined && (
-              <span>({tailor.reviewsCount})</span>
+            {tailor.reviewsCount ? (
+              <>
+                <b className="text-ink">{tailor.rating.toFixed(1)}</b>
+                <span>({tailor.reviewsCount})</span>
+              </>
+            ) : (
+              <span>Yangi</span>
             )}
           </span>
           {tailor.distanceKm !== undefined && (
@@ -69,7 +73,9 @@ export default function TailorCard({ tailor }: { tailor: TailorWithDistance }) {
           )}
         </div>
 
-        <p className="mt-1 line-clamp-1 text-sm text-ink/60">{tailor.address}</p>
+        <p className="mt-1 line-clamp-1 text-sm text-ink/60">
+          {tailor.address}
+        </p>
 
         <div className="mt-2 flex flex-wrap gap-1.5">
           {chips.map((c) => (
