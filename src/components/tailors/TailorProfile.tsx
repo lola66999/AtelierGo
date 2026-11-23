@@ -19,6 +19,9 @@ import { categories } from "@/data/categories";
 import { formatPrice } from "@/lib/format";
 import PortfolioGallery from "@/components/tailors/PortfolioGallery";
 import TailorsMap from "../map/TailorMapLoader";
+import OpenBadge from "@/components/tailors/OpenBadge";
+import WorkingHoursCard from "@/components/tailors/WorkingHoursCard";
+import OrderButton from "@/components/orders/OrderButton";
 
 export default function TailorProfile({ id }: { id: string }) {
   const { data: tailor, isLoading } = useTailor(id);
@@ -107,6 +110,7 @@ export default function TailorProfile({ id }: { id: string }) {
                 <Briefcase className="h-4 w-4 text-brand-600" />
                 {tailor.experienceYears} yillik tajriba
               </span>
+              <OpenBadge hours={tailor.workingHours} />
             </div>
 
             <p className="mt-2 flex items-start gap-1 text-sm text-ink/70">
@@ -144,6 +148,12 @@ export default function TailorProfile({ id }: { id: string }) {
                   Telegram
                 </a>
               )}
+              <OrderButton
+                tailorId={tailor.id}
+                tailorName={tailor.name}
+                services={tailor.services}
+              />
+            
             </div>
           </div>
         </div>
@@ -163,7 +173,7 @@ export default function TailorProfile({ id }: { id: string }) {
             Portfolio
           </h2>
           <PortfolioGallery images={tailor.portfolio} name={tailor.name} />
-           <ReviewsSection tailorId={tailor.id} />
+          <ReviewsSection tailorId={tailor.id} />
         </section>
         {/* Narxlar va xarita */}
         <aside className="space-y-6 lg:col-span-2">
@@ -171,6 +181,7 @@ export default function TailorProfile({ id }: { id: string }) {
             <h2 className="font-heading text-2xl font-bold text-brand-900">
               Xizmatlar va narxlar
             </h2>
+            {tailor.workingHours && <WorkingHoursCard hours={tailor.workingHours} />}
             <ul className="mt-3 divide-y divide-cream-dark">
               {tailor.services.map((s) => (
                 <li

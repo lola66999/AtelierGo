@@ -7,6 +7,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { formatDistance } from "@/lib/distance";
 import { categories } from "@/data/categories";
 import { TailorWithDistance } from "@/services/types";
+import OpenBadge from "@/components/tailors/OpenBadge";
 
 export default function TailorCard({ tailor }: { tailor: TailorWithDistance }) {
   const { isFavorite, toggle } = useFavorites();
@@ -53,7 +54,7 @@ export default function TailorCard({ tailor }: { tailor: TailorWithDistance }) {
           </button>
         </div>
 
-        <div className="mt-1 flex items-center gap-3 text-sm text-ink/70">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/70">
           <span className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
             {tailor.reviewsCount ? (
@@ -71,6 +72,7 @@ export default function TailorCard({ tailor }: { tailor: TailorWithDistance }) {
               {formatDistance(tailor.distanceKm)}
             </span>
           )}
+           <OpenBadge hours={tailor.workingHours} />
         </div>
 
         <p className="mt-1 line-clamp-1 text-sm text-ink/60">

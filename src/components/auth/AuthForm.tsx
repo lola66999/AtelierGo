@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Loader2, Scissors, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { UserRole } from "@/services/types";
+import { useSearchParams } from "next/navigation";
 // "90 123 45 67" -> "+998901234567"
 const normalizePhone = (value: string) => {
   const digits = value.replace(/\D/g, "");
@@ -16,8 +17,10 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
   const { login, register } = useAuth();
   const isRegister = mode === "register";
-
-  const [role, setRole] = useState<UserRole>("client");
+  const params = useSearchParams();
+  const [role, setRole] = useState<UserRole>(
+    params.get("role") === "tailor" ? "tailor" : "client",
+  );
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +79,11 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
           {isRegister ? "Ro'yxatdan o'tish" : "Kirish"}
         </h1>
         <p className="mt-1 text-sm text-ink/60">
-          {isRegister ? "AtelierGo'da hisob yarating" : "Hisobingizga kiring"}
+          {isRegister
+            ? role === "tailor"
+              ? "Tikuvchi profilini yarating va yangi mijozlar toping"
+              : "AtelierGo'da hisob yarating"
+            : "Hisobingizga kiring"}
         </p>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">

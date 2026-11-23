@@ -43,10 +43,11 @@ export default function Footer() {
           <h4 className="font-heading text-lg text-white">Tikuvchilar uchun</h4>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
-              <Link href="/register" className="hover:text-white">
+              <Link href="/register?role=tailor" className="hover:text-white">
                 Tikuvchi bo'lish
               </Link>
             </li>
+
             <li>
               <Link href="/dashboard" className="hover:text-white">
                 Kabinet

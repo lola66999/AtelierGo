@@ -6,6 +6,7 @@ import { LocateFixed, Map as MapIcon, List, Search } from "lucide-react";
 import { useCategories, useTailors } from "@/hooks/useTailors";
 import TailorCard from "@/components/tailors/TailorCard";
 import TailorsMap from "../map/TailorMapLoader";
+import { getOpenStatus } from "@/lib/hours";
 const TASHKENT = { lat: 41.3111, lng: 69.2797 };
 
 export default function TailorsView() {
@@ -16,6 +17,7 @@ export default function TailorsView() {
   const [search, setSearch] = useState(searchInput);
   const [category, setCategory] = useState(params.get("category") ?? "");
   const [minRating, setMinRating] = useState(0);
+  const [openNow, setOpenNow] = useState(false);
   const [sortBy, setSortBy] = useState<"distance" | "rating">("distance");
   const [coords, setCoords] = useState(TASHKENT);
   const [located, setLocated] = useState(false);
@@ -35,6 +37,12 @@ export default function TailorsView() {
     lng: coords.lng,
     sortBy,
   });
+
+  const list = openNow
+  ? (data ?? []).filter(
+      (t) => t.workingHours && getOpenStatus(t.workingHours).open
+    )
+  : data;
 
   const locate = () => {
     navigator.geolocation?.getCurrentPosition(

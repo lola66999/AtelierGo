@@ -1,4 +1,5 @@
 import { Tailor, User } from "./types";
+import { defaultHours } from "@/lib/hours";
 
 const KEY = "ateliergo:my-tailors";
 
@@ -30,6 +31,7 @@ export const emptyProfile = (user: User): Tailor => ({
   categories: [],
   services: [],
   portfolio: [],
+  workingHours: defaultHours(),
 });
 
 export async function getMyProfile(user: User): Promise<Tailor> {

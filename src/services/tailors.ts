@@ -3,6 +3,7 @@ import { categories } from "@/data/categories";
 import { getDistanceKm } from "@/lib/distance";
 import { readStoredTailors } from "@/services/dashboard";
 import { readReviews } from "@/services/reviews";
+import { defaultHours } from "@/lib/hours";
 
 
 import { Category, Tailor, TailorFilters, TailorWithDistance } from "./types";
@@ -25,10 +26,12 @@ const withReviews = (t: Tailor): Tailor => {
     reviewsCount: count,
   };
 };
-
 const allTailors = (): Tailor[] =>
   [
-    ...tailors,
+    ...tailors.map((t) => ({
+      ...t,
+      workingHours: t.workingHours ?? defaultHours(),
+    })),
     ...readStoredTailors().filter((t) => t.avatar && t.address && t.phone),
   ].map(withReviews);
   

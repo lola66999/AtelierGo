@@ -20,6 +20,7 @@ export type Tailor = {
   categories: string[]; // Category id'lari
   services: Service[];
   portfolio: string[];
+  workingHours?: WorkingHours;
 };
 
 export type TailorWithDistance = Tailor & { distanceKm?: number };
@@ -74,3 +75,38 @@ export type ReviewPayload = {
   rating: number;
   comment: string;
 };
+
+export type OrderStatus = "new" | "accepted" | "rejected" | "done";
+
+export type Order = {
+  id: string;
+  tailorId: string;
+  tailorName: string;
+  clientId: string;
+  clientName: string;
+  clientPhone: string;
+  service: string;
+  description: string;
+  budget?: number;
+  dueDate?: string; // YYYY-MM-DD
+  status: OrderStatus;
+  createdAt: string;
+};
+
+export type OrderPayload = {
+  tailorId: string;
+  tailorName: string;
+  service: string;
+  description: string;
+  budget?: number;
+  dueDate?: string;
+};
+
+export type DaySchedule = {
+  open: boolean;
+  from: string; // "09:00"
+  to: string; // "18:00"
+};
+
+// 7 ta element: 0 = Dushanba ... 6 = Yakshanba
+export type WorkingHours = DaySchedule[];

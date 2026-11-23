@@ -17,6 +17,10 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const { user, ready, logout } = useAuth();
+  const navLinks =
+  user?.role === "client"
+    ? [...links, { href: "/orders", label: "Buyurtmalar" }]
+    : links;
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string) =>

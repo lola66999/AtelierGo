@@ -4,19 +4,32 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BarChart3, Check, Image as ImageIcon, Loader2, Scissors, User as UserIcon } from "lucide-react";
+import {
+  BarChart3,
+  Check,
+  Clock,
+  Image as ImageIcon,
+  Inbox,
+  Loader2,
+  Scissors,
+  User as UserIcon,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useTailorOrders } from "@/hooks/useOrders";
 import { getMyProfile, saveMyProfile } from "@/services/dashboard";
 import ProfileTab from "@/components/dashboard/ProfileTab";
 import ServicesTab from "@/components/dashboard/ServicesTab";
 import PortfolioTab from "@/components/dashboard/PortfolioTab";
+import HoursTab from "./HoursTab";
+import OrdersTab from "@/components/dashboard/OrdersTab";
 import StatsTab from "@/components/dashboard/StatsTab";
 import { Tailor } from "@/services/types";
-
 const tabs = [
   { id: "profile", label: "Profil", Icon: UserIcon },
   { id: "services", label: "Xizmatlar", Icon: Scissors },
   { id: "portfolio", label: "Portfolio", Icon: ImageIcon },
+  { id: "hours", label: "Ish vaqti", Icon: Clock },
+  { id: "orders", label: "So'rovlar", Icon: Inbox },
   { id: "stats", label: "Statistika", Icon: BarChart3 },
 ] as const;
 
@@ -55,8 +68,16 @@ export default function DashboardView() {
       setTimeout(() => setSaved(false), 2500);
     },
     onError: () =>
-      setError("Saqlab bo'lmadi. Rasmlar hajmi katta bo'lishi mumkin, ba'zilarini o'chirib ko'ring."),
+      setError(
+        "Saqlab bo'lmadi. Rasmlar hajmi katta bo'lishi mumkin, ba'zilarini o'chirib ko'ring."
+      ),
   });
+
+  // Tikuvchiga kelgan so'rovlar (hook'lar early return'dan oldin turishi shart)
+  const { data: orders = [] } = useTailorOrders(
+    user?.role === "tailor" ? user.id : undefined
+  );
+  const newCount = orders.filter((o) => o.status === "new").length;
 
   if (!ready || (user && !draft && user.role === "tailor")) {
     return (
@@ -78,7 +99,7 @@ export default function DashboardView() {
           Tikuvchi sifatida ro'yxatdan o'tish uchun yangi hisob yarating.
         </p>
         <Link
-          href="/register"
+          href="/register?role=tailor"
           className="mt-6 inline-block rounded-full bg-brand-700 px-6 py-2.5 text-white"
         >
           Ro'yxatdan o'tish
@@ -97,6 +118,9 @@ export default function DashboardView() {
   if (!draft.address.trim()) missing.push("manzil");
   if (!draft.phone.trim()) missing.push("telefon");
   const published = missing.length === 0;
+
+  // Saqlash tugmasi faqat tahrirlanadigan tablarda ko'rinadi
+  const showSave = tab !== "stats" && tab !== "orders";
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:px-6">
@@ -137,6 +161,11 @@ export default function DashboardView() {
           >
             <Icon className="h-4 w-4" />
             {label}
+            {id === "orders" && newCount > 0 && (
+              <span className="rounded-full bg-amber-400 px-2 text-xs font-bold text-white">
+                {newCount}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -145,10 +174,12 @@ export default function DashboardView() {
         {tab === "profile" && <ProfileTab draft={draft} update={update} />}
         {tab === "services" && <ServicesTab draft={draft} update={update} />}
         {tab === "portfolio" && <PortfolioTab draft={draft} update={update} />}
+        {tab === "hours" && <HoursTab draft={draft} update={update} />}
+        {tab === "orders" && <OrdersTab orders={orders} />}
         {tab === "stats" && <StatsTab />}
       </div>
 
-      {tab !== "stats" && (
+      {showSave && (
         <div className="mt-5 flex items-center justify-end gap-4">
           {error && <p className="text-sm text-red-600">{error}</p>}
           {saved && (
