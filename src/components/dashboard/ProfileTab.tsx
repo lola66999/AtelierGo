@@ -4,6 +4,7 @@ import Image from "next/image";
 import { categories } from "@/data/categories";
 import { fileToDataUrl } from "@/lib/image";
 import LocationPicker from "@/components/dashboard/LocationPickerLoader";
+import TailorsMap from "../map/TailorMapLoader";
 import { Tailor } from "@/services/types";
 import { useRef, useState } from "react";
 import { Camera, Loader2, MapPin } from "lucide-react";
