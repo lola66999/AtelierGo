@@ -22,6 +22,7 @@ import TailorsMap from "../map/TailorMapLoader";
 import OpenBadge from "@/components/tailors/OpenBadge";
 import WorkingHoursCard from "@/components/tailors/WorkingHoursCard";
 import OrderButton from "@/components/orders/OrderButton";
+import ShareButton from "@/components/tailors/ShareButton";
 
 export default function TailorProfile({ id }: { id: string }) {
   const { data: tailor, isLoading } = useTailor(id);
@@ -85,17 +86,20 @@ export default function TailorProfile({ id }: { id: string }) {
                   <BadgeCheck className="h-6 w-6 text-brand-600" />
                 )}
               </h1>
-              <button
-                onClick={() => toggle(tailor.id)}
-                aria-label="Sevimlilarga qo'shish"
-                className="rounded-full border border-cream-dark p-2.5 hover:bg-brand-50"
-              >
-                <Heart
-                  className={`h-5 w-5 ${
-                    fav ? "fill-brand-600 text-brand-600" : "text-brand-500"
-                  }`}
-                />
-              </button>
+              <div className="flex items-center gap-2">
+                <ShareButton id={tailor.id} name={tailor.name} />
+                <button
+                  onClick={() => toggle(tailor.id)}
+                  aria-label="Sevimlilarga qo'shish"
+                  className="rounded-full border border-cream-dark p-2.5 hover:bg-brand-50"
+                >
+                  <Heart
+                    className={`h-5 w-5 ${
+                      fav ? "fill-brand-600 text-brand-600" : "text-brand-500"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
 
             <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-ink/70">
@@ -153,7 +157,6 @@ export default function TailorProfile({ id }: { id: string }) {
                 tailorName={tailor.name}
                 services={tailor.services}
               />
-            
             </div>
           </div>
         </div>
@@ -181,7 +184,9 @@ export default function TailorProfile({ id }: { id: string }) {
             <h2 className="font-heading text-2xl font-bold text-brand-900">
               Xizmatlar va narxlar
             </h2>
-            {tailor.workingHours && <WorkingHoursCard hours={tailor.workingHours} />}
+            {tailor.workingHours && (
+              <WorkingHoursCard hours={tailor.workingHours} />
+            )}
             <ul className="mt-3 divide-y divide-cream-dark">
               {tailor.services.map((s) => (
                 <li
