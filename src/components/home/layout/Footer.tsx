@@ -23,7 +23,9 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-heading text-lg text-white">{t("footer.pages")}</h4>
+          <h4 className="font-heading text-lg text-white">
+            {t("footer.pages")}
+          </h4>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
               <Link href="/tailors" className="hover:text-white">
