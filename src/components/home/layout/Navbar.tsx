@@ -18,9 +18,9 @@ export default function Navbar() {
   const pathname = usePathname();
   const { user, ready, logout } = useAuth();
   const navLinks =
-  user?.role === "client"
-    ? [...links, { href: "/orders", label: "Buyurtmalar" }]
-    : links;
+    user?.role === "client"
+      ? [...links, { href: "/orders", label: "Buyurtmalar" }]
+      : links;
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string) =>
@@ -61,10 +61,10 @@ export default function Navbar() {
 
         {/* O'ng tomon */}
         <div className="flex items-center gap-2 md:gap-3">
-          <button className="hidden items-center gap-1 rounded-full px-3 py-2 text-sm text-ink/80 hover:bg-brand-100 sm:flex">
+          <span className="hidden items-center gap-1 px-3 py-2 text-sm text-ink/70 sm:flex">
             <MapPin className="h-4 w-4 text-brand-700" />
             Toshkent
-          </button>
+          </span>
 
           <Link
             href="/favorites"

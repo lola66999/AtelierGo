@@ -7,11 +7,13 @@ import { Loader2, Scissors, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { UserRole } from "@/services/types";
 import { useSearchParams } from "next/navigation";
+import { normalizePhone } from "@/lib/phone";
+
 // "90 123 45 67" -> "+998901234567"
-const normalizePhone = (value: string) => {
-  const digits = value.replace(/\D/g, "");
-  return "+998" + digits.slice(-9);
-};
+// const normalizePhone = (value: string) => {
+//   const digits = value.replace(/\D/g, "");
+//   return "+998" + digits.slice(-9);
+// };
 
 export default function AuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
@@ -27,47 +29,38 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+const onSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
 
-    if (phone.replace(/\D/g, "").length < 9) {
-      setError("Telefon raqamni to'liq kiriting");
-      return;
-    }
-    if (password.length < 6) {
-      setError("Parol kamida 6 ta belgidan iborat bo'lsin");
-      return;
-    }
-    if (isRegister && name.trim().length < 2) {
-      setError("Ismingizni kiriting");
-      return;
-    }
+  const normalized = normalizePhone(phone);
+  if (!normalized) {
+    setError("Telefon raqamni to'liq kiriting (masalan, 90 123 45 67)");
+    return;
+  }
+  if (password.length < 6) {
+    setError("Parol kamida 6 ta belgidan iborat bo'lsin");
+    return;
+  }
+  if (isRegister && name.trim().length < 2) {
+    setError("Ismingizni kiriting");
+    return;
+  }
 
-    setLoading(true);
-    try {
-      const normalized = normalizePhone(phone);
-      const user = isRegister
-        ? await register({
-            name: name.trim(),
-            phone: normalized,
-            password,
-            role,
-          })
-        : await login({ phone: normalized, password });
-      router.push(
-        user.role === "tailor"
-          ? "/dashboard"
-          : user.role === "admin"
-            ? "/admin"
-            : "/",
-      );
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Xatolik yuz berdi");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const user = isRegister
+      ? await register({ name: name.trim(), phone: normalized, password, role })
+      : await login({ phone: normalized, password });
+    router.push(
+      user.role === "tailor" ? "/dashboard" : user.role === "admin" ? "/admin" : "/"
+    );
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Xatolik yuz berdi");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const inputClass =
     "w-full rounded-xl border border-cream-dark bg-white px-4 py-3 text-sm outline-none focus:border-brand-500";

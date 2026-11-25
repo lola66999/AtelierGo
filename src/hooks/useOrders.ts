@@ -12,6 +12,9 @@ export const useTailorOrders = (tailorId?: string) =>
     queryKey: ["orders", "tailor", tailorId],
     queryFn: () => getTailorOrders(tailorId!),
     enabled: !!tailorId,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchInterval: 5000, // har 5 soniyada tekshiradi
   });
 
 export const useClientOrders = (clientId?: string) =>
@@ -19,6 +22,9 @@ export const useClientOrders = (clientId?: string) =>
     queryKey: ["orders", "client", clientId],
     queryFn: () => getClientOrders(clientId!),
     enabled: !!clientId,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchInterval: 5000,
   });
 
 export function useCreateOrder() {

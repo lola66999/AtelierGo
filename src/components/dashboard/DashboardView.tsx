@@ -17,6 +17,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useTailorOrders } from "@/hooks/useOrders";
 import { getMyProfile, saveMyProfile } from "@/services/dashboard";
+import { isValidPhone, isValidTelegram, normalizePhone } from "@/lib/phone";
 import ProfileTab from "@/components/dashboard/ProfileTab";
 import ServicesTab from "@/components/dashboard/ServicesTab";
 import PortfolioTab from "@/components/dashboard/PortfolioTab";
@@ -69,13 +70,13 @@ export default function DashboardView() {
     },
     onError: () =>
       setError(
-        "Saqlab bo'lmadi. Rasmlar hajmi katta bo'lishi mumkin, ba'zilarini o'chirib ko'ring."
+        "Saqlab bo'lmadi. Rasmlar hajmi katta bo'lishi mumkin, ba'zilarini o'chirib ko'ring.",
       ),
   });
 
   // Tikuvchiga kelgan so'rovlar (hook'lar early return'dan oldin turishi shart)
   const { data: orders = [] } = useTailorOrders(
-    user?.role === "tailor" ? user.id : undefined
+    user?.role === "tailor" ? user.id : undefined,
   );
   const newCount = orders.filter((o) => o.status === "new").length;
 
@@ -112,6 +113,23 @@ export default function DashboardView() {
 
   const update = (patch: Partial<Tailor>) =>
     setDraft((d) => (d ? { ...d, ...patch } : d));
+
+  const onSave = () => {
+    if (!isValidPhone(draft.phone)) {
+      setTab("profile");
+      setError("Telefon raqam noto'g'ri. Masalan: +998 90 123 45 67");
+      return;
+    }
+    if (draft.telegram && !isValidTelegram(draft.telegram)) {
+      setTab("profile");
+      setError(
+        "Telegram username noto'g'ri (5-32 ta lotin harf, raqam yoki _)",
+      );
+      return;
+    }
+    setError("");
+    save.mutate({ ...draft, phone: normalizePhone(draft.phone)! });
+  };
 
   const missing: string[] = [];
   if (!draft.avatar) missing.push("profil rasmi");
@@ -188,7 +206,7 @@ export default function DashboardView() {
             </span>
           )}
           <button
-            onClick={() => save.mutate(draft)}
+            onClick={onSave}
             disabled={save.isPending}
             className="flex items-center gap-2 rounded-full bg-brand-700 px-8 py-3 font-medium text-white hover:bg-brand-800 disabled:opacity-60"
           >

@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { formatPrice } from "@/lib/format";
 import { Service } from "@/services/types";
+import { tailors } from "@/data/tailors";
 type Props = {
   tailorId: string;
   tailorName: string;
@@ -29,6 +30,7 @@ export default function OrderModal({
   const [service, setService] = useState(services[0]?.name ?? OTHER);
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
+  const isDemo = tailors.some((t) => t.id === tailorId);
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
@@ -55,7 +57,7 @@ export default function OrderModal({
           dueDate: dueDate || undefined,
         },
       },
-      { onSuccess: () => setSent(true) }
+      { onSuccess: () => setSent(true) },
     );
   };
 
@@ -85,6 +87,13 @@ export default function OrderModal({
           <div className="py-8 text-center">
             <CheckCircle2 className="mx-auto h-12 w-12 text-green-600" />
             <p className="mt-3 font-medium text-ink">So'rov yuborildi!</p>
+            {isDemo && (
+              <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs text-amber-800">
+                Bu namunaviy (demo) tikuvchi, shuning uchun javob kelmaydi.
+                Butun oqimni sinash uchun o'zingiz yaratgan tikuvchi profiliga
+                buyurtma bering.
+              </p>
+            )}
             <p className="mt-1 text-sm text-ink/60">
               {tailorName} javob bergach, holatini "Buyurtmalar" bo'limida
               ko'rasiz.
