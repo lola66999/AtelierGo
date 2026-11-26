@@ -61,6 +61,19 @@ const uz = {
   "share.copied": "Nusxalandi!",
   "share.more": "Boshqa ilovalar",
   "share.text": "{name}: AtelierGo'da tikuvchi",
+
+    // Banner slaydlari
+  "hero.s2.title": "Ishlar portfoliosini ko'ring",
+  "hero.s2.text":
+    "Tikuvchilarning haqiqiy ishlari bilan tanishing va o'zingizga mosini tanlang.",
+  "hero.s3.title": "Buyurtmani onlayn bering",
+  "hero.s3.text":
+    "So'rov yuboring, tikuvchi javob beradi va buyurtma holatini kuzatib borasiz.",
+  "hero.s4.title": "Tikuvchimisiz? Mijozlar sizni kutmoqda",
+  "hero.s4.text":
+    "Profil yarating, narxlarni belgilang va yaqin atrofdagi mijozlarga ko'rinib turing.",
+  "hero.prev": "Oldingi",
+  "hero.next": "Keyingi",
 };
 
 export type TKey = keyof typeof uz;
@@ -122,6 +135,18 @@ const ru: Dict = {
   "share.copied": "Скопировано!",
   "share.more": "Другие приложения",
   "share.text": "{name}: мастер на AtelierGo",
+
+    "hero.s2.title": "Смотрите портфолио работ",
+  "hero.s2.text":
+    "Изучите реальные работы мастеров и выберите подходящего.",
+  "hero.s3.title": "Оформите заказ онлайн",
+  "hero.s3.text":
+    "Отправьте заявку, мастер ответит, а вы будете следить за статусом заказа.",
+  "hero.s4.title": "Вы мастер? Вас ждут клиенты",
+  "hero.s4.text":
+    "Создайте профиль, укажите цены и станьте заметны для клиентов поблизости.",
+  "hero.prev": "Назад",
+  "hero.next": "Вперёд",
 };
 
 const en: Dict = {
@@ -178,6 +203,17 @@ const en: Dict = {
   "share.copied": "Copied!",
   "share.more": "More apps",
   "share.text": "{name}: tailor on AtelierGo",
+
+    "hero.s2.title": "Browse real portfolios",
+  "hero.s2.text": "See tailors' actual work and choose the one that suits you.",
+  "hero.s3.title": "Place your order online",
+  "hero.s3.text":
+    "Send a request, the tailor replies, and you can follow the order status.",
+  "hero.s4.title": "Are you a tailor? Clients are waiting",
+  "hero.s4.text":
+    "Create a profile, set your prices and be seen by clients nearby.",
+  "hero.prev": "Previous",
+  "hero.next": "Next",
 };
 
 export const dictionary = { uz, ru, en };
