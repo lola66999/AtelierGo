@@ -2,13 +2,26 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Scissors, Search } from "lucide-react";
+import { LayoutGrid, Scissors, Search } from "lucide-react";
 import { useCategories } from "@/hooks/useTailors";
+import { useLang } from "@/context/LanguageContext";
+import Dropdown from "@/components/ui/Dropdown";
+import type { TKey } from "@/i18n/dictionary";
+
 export default function Hero() {
   const router = useRouter();
+  const { t } = useLang();
   const { data: categories = [] } = useCategories();
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
+
+  const options = [
+    { value: "", label: t("hero.allCategories") },
+    ...categories.map((c) => ({
+      value: c.id,
+      label: t(`cat.${c.id}` as TKey),
+    })),
+  ];
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +38,9 @@ export default function Hero() {
           <div className="p-6 pb-28 md:p-12 md:pb-32">
             <p className="font-script text-3xl text-brand-600">AtelierGo</p>
             <h1 className="mt-2 font-heading text-4xl font-bold leading-tight text-brand-900 md:text-5xl">
-              Yaqin atelye va tikuvchilarni toping!
+              {t("hero.title")}
             </h1>
-            <p className="mt-4 max-w-md text-ink/70">
-              Kiyim tikish, ta'mirlash va boshqa xizmatlar endilikda yanada
-              oson.
-            </p>
+            <p className="mt-4 max-w-md text-ink/70">{t("hero.subtitle")}</p>
           </div>
 
           <div className="relative hidden h-full min-h-[320px] md:block">
@@ -45,25 +55,21 @@ export default function Hero() {
           onSubmit={onSubmit}
           className="absolute inset-x-4 bottom-4 flex flex-col gap-2 rounded-2xl bg-white p-3 shadow-lg md:inset-x-12 md:flex-row md:items-center"
         >
-          <select
+          <Dropdown
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="rounded-xl border border-cream-dark bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 md:w-56"
-          >
-            <option value="">Barcha kategoriyalar</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            onChange={setCategory}
+            options={options}
+            icon={<LayoutGrid className="h-4 w-4" />}
+            placement="top"
+            className="md:w-64"
+          />
 
           <div className="flex flex-1 items-center gap-2 rounded-xl border border-cream-dark px-3 focus-within:border-brand-500">
             <Search className="h-4 w-4 text-brand-600" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Ism, xizmat yoki manzil bo'yicha qidiring"
+              placeholder={t("hero.searchPlaceholder")}
               className="w-full py-3 text-sm outline-none"
             />
           </div>
@@ -72,7 +78,7 @@ export default function Hero() {
             type="submit"
             className="rounded-xl bg-brand-700 px-8 py-3 text-sm font-medium text-white hover:bg-brand-800"
           >
-            Qidirish
+            {t("hero.search")}
           </button>
         </form>
       </div>

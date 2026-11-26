@@ -7,6 +7,7 @@ import { useCategories, useTailors } from "@/hooks/useTailors";
 import TailorCard from "@/components/tailors/TailorCard";
 import TailorsMap from "../map/TailorMapLoader";
 import { getOpenStatus } from "@/lib/hours";
+import Dropdown from "@/components/ui/Dropdown";
 const TASHKENT = { lat: 41.3111, lng: 69.2797 };
 
 export default function TailorsView() {
@@ -39,10 +40,10 @@ export default function TailorsView() {
   });
 
   const list = openNow
-  ? (data ?? []).filter(
-      (t) => t.workingHours && getOpenStatus(t.workingHours).open
-    )
-  : data;
+    ? (data ?? []).filter(
+        (t) => t.workingHours && getOpenStatus(t.workingHours).open,
+      )
+    : data;
 
   const locate = () => {
     navigator.geolocation?.getCurrentPosition(
@@ -51,12 +52,10 @@ export default function TailorsView() {
         setLocated(true);
       },
       () => alert("Lokatsiyaga ruxsat berilmadi"),
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   };
 
-  const selectClass =
-    "rounded-xl border border-cream-dark bg-white px-3 py-2.5 text-sm outline-none focus:border-brand-500";
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-6">
@@ -76,24 +75,26 @@ export default function TailorsView() {
           />
         </div>
 
-        <select
+        <Dropdown
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as "distance" | "rating")}
-          className={selectClass}
-        >
-          <option value="distance">Masofa bo'yicha</option>
-          <option value="rating">Reyting bo'yicha</option>
-        </select>
+          onChange={(v) => setSortBy(v as "distance" | "rating")}
+          options={[
+            { value: "distance", label: "Masofa bo'yicha" },
+            { value: "rating", label: "Reyting bo'yicha" },
+          ]}
+          className="md:w-52"
+        />
 
-        <select
-          value={minRating}
-          onChange={(e) => setMinRating(Number(e.target.value))}
-          className={selectClass}
-        >
-          <option value={0}>Barcha reyting</option>
-          <option value={4}>4+ reyting</option>
-          <option value={4.5}>4.5+ reyting</option>
-        </select>
+        <Dropdown
+          value={String(minRating)}
+          onChange={(v) => setMinRating(Number(v))}
+          options={[
+            { value: "0", label: "Barcha reyting" },
+            { value: "4", label: "4+ reyting" },
+            { value: "4.5", label: "4.5+ reyting" },
+          ]}
+          className="md:w-44"
+        />
 
         <button
           onClick={locate}
@@ -145,14 +146,19 @@ export default function TailorsView() {
         {/* Ro'yxat */}
         <div className={view === "map" ? "hidden lg:block" : ""}>
           <p className="mb-3 text-sm text-ink/60">
-            {isLoading ? "Yuklanmoqda..." : `${data?.length ?? 0} ta atelye topildi`}
+            {isLoading
+              ? "Yuklanmoqda..."
+              : `${data?.length ?? 0} ta atelye topildi`}
             {located && " · sizning joylashuvingiz bo'yicha"}
           </p>
 
           <div className="space-y-4">
             {isLoading &&
               Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-44 animate-pulse rounded-2xl bg-cream-dark" />
+                <div
+                  key={i}
+                  className="h-44 animate-pulse rounded-2xl bg-cream-dark"
+                />
               ))}
 
             {!isLoading && data?.length === 0 && (

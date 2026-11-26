@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -26,8 +26,7 @@ function Clicker({ onPick }: { onPick: (lat: number, lng: number) => void }) {
   });
   return null;
 }
-const [focus, setFocus] = useState(0);
-// focus o'zgarganda xaritani markerga olib borib, yaqinlashtiradi
+
 function FocusOn({
   lat,
   lng,
@@ -38,10 +37,12 @@ function FocusOn({
   focus: number;
 }) {
   const map = useMap();
+
   useEffect(() => {
     if (focus > 0) map.setView([lat, lng], 16);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focus]);
+
   return null;
 }
 
